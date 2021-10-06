@@ -94,8 +94,8 @@ Disassembly of section .text:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000092 <main>:
+	else if (digit == 9) DISPLAY_9;
 	else DISPLAY_CLEAR;
-
 }
 
 int main()
@@ -384,7 +384,7 @@ inline uint8_t display_digit()
  1fc:	84 30       	cpi	r24, 0x04	; 4
  1fe:	51 f5       	brne	.+84     	; 0x254 <__vector_11+0x9c>
  200:	80 91 65 00 	lds	r24, 0x0065
-
+	return 10;
 }
 
 inline void display(uint8_t digit)

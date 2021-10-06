@@ -71,7 +71,7 @@ inline uint8_t display_digit()
 	if (display_n == 2) return display_2;
 	if (display_n == 3) return display_3;
 	if (display_n == 4) return display_4;
-	return 10;
+	return 10;
 }
 
 inline void display(uint8_t digit)
@@ -86,7 +86,7 @@ inline void display(uint8_t digit)
 	else if (digit == 7) DISPLAY_7;
 	else if (digit == 8) DISPLAY_8;
 	else if (digit == 9) DISPLAY_9;
-	else DISPLAY_CLEAR;
+	else DISPLAY_CLEAR;
 }
 
 int main()
