@@ -68,6 +68,12 @@ volatile uint8_t menu_option = 0;
 volatile uint8_t menu_button_delay_counter = 0;
 volatile uint8_t display_vcc_delay_counter = 32; //Initial delay of 32 * 4 = 128ms
 
+//System variables
+volatile uint8_t time_hour = 0;
+volatile uint8_t time_minute = 0;
+volatile uint8_t time_second = 0;
+volatile uint8_t time_4_milliseconds = 0;
+
 //7-segment display functions
 
 inline uint8_t display_digit()
@@ -109,6 +115,39 @@ inline void display_vcc()
 		//125 * 4ms = 500ms delay
 		display_vcc_delay_counter = 125;
 	}
+}
+
+inline void display_time()
+{
+	display_1 = time_hour / 10 % 10;
+	display_2 = time_hour % 10;
+	display_3 = time_minute / 10 % 10;
+	display_4 = time_minute % 10;
+}
+
+inline void display_watering_time_setting()
+{
+	//TODO
+}
+
+inline void display_watering_duration_setting()
+{
+	//TODO
+}
+
+inline void display_lamp_time_on()
+{
+	//TODO
+}
+
+inline void display_lamp_time_off()
+{
+	//TODO
+}
+
+inline void display_watering_countdown()
+{
+	//TODO
 }
 
 int main()
@@ -191,31 +230,80 @@ int main()
 			cli();
 			menu_option++;
 			if (menu_option == 8) menu_option = 0;
+			display_vcc_delay_counter = 1;
 			sei();
 
 			//125 * 4ms = 500ms delay
 			menu_button_delay_counter = 125;
 			while (menu_button_delay_counter);
 		}
-		//M+ button
-		if (!(PINA & (1<<PA2)))
-		{
-			
-		}
-		//M- button
-		if (!(PINA & (1<<PA3)))
-		{
-			
-		}
 		//H+ button
 		if (!(PINA & (1<<PA0)))
 		{
-			
+			//Safe menu option change
+			cli();
+			if (menu_option == 1)
+			{
+				time_hour++;
+				if (time_hour == 24) time_hour = 0;
+			}
+			sei();
+
+			//50 * 4ms = 200ms delay
+			menu_button_delay_counter = 50;
+			while (menu_button_delay_counter);
 		}
 		//H- button
 		if (!(PINA & (1<<PA1)))
 		{
-			
+			//Safe menu option change
+			cli();
+			if (menu_option == 1)
+			{
+				time_hour--;
+				if (time_hour == 255) time_hour = 23;
+			}
+			sei();
+
+			//50 * 4ms = 200ms delay
+			menu_button_delay_counter = 50;
+			while (menu_button_delay_counter);
+		}
+		//M+ button
+		if (!(PINA & (1<<PA2)))
+		{
+			//Safe menu option change
+			cli();
+			if (menu_option == 1)
+			{
+				time_minute++;
+				if (time_minute == 60) time_minute = 0;
+				time_second = 0;
+				time_4_milliseconds = 0;
+			}
+			sei();
+
+			//50 * 4ms = 200ms delay
+			menu_button_delay_counter = 50;
+			while (menu_button_delay_counter);
+		}
+		//M- button
+		if (!(PINA & (1<<PA3)))
+		{
+			//Safe menu option change
+			cli();
+			if (menu_option == 1)
+			{
+				time_minute--;
+				if (time_minute == 255) time_minute = 59;
+				time_second = 0;
+				time_4_milliseconds = 0;
+			}
+			sei();
+
+			//50 * 4ms = 200ms delay
+			menu_button_delay_counter = 50;
+			while (menu_button_delay_counter);
 		}
 	}
 }
@@ -233,31 +321,31 @@ ISR(TIMER0_OVF_vect)
 	}
 	else if (menu_option == 1)
 	{
-		//TODO
+		display_time();
 	}
 	else if (menu_option == 2)
 	{
-		//TODO
+		display_watering_time_setting();
 	}
 	else if (menu_option == 3)
 	{
-		//TODO
+		display_watering_duration_setting();
 	}
 	else if (menu_option == 4)
 	{
-		//TODO
+		display_lamp_time_on();
 	}
 	else if (menu_option == 5)
 	{
-		//TODO
+		display_lamp_time_off();
 	}
 	else if (menu_option == 6)
 	{
-		//TODO
+		display_time();
 	}
 	else if (menu_option == 7)
 	{
-		//TODO
+		display_watering_countdown();
 	}
 
 	//7-segment display - set digit
@@ -358,5 +446,27 @@ ISR(TIMER0_OVF_vect)
 		LED2_ON;
 		LED1_ON;
 		LED0_ON;
+	}
+
+	//Timekeeping
+	time_4_milliseconds++;
+	if (time_4_milliseconds == 250)
+	{
+		time_4_milliseconds = 0;
+		time_second++;
+		if (time_second == 60)
+		{
+			time_second = 0;
+			time_minute++;
+			if (time_minute == 60)
+			{
+				time_minute = 0;
+				time_hour++;
+				if (time_hour == 24)
+				{
+					time_hour = 0;
+				}
+			}
+		}
 	}
 }
