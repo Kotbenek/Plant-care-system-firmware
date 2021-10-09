@@ -3,7 +3,6 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
 
 //7-segment display digit macros
 #define DISPLAY_0          PORTD = 0b00010100
@@ -46,9 +45,11 @@ volatile uint8_t display_3 = 0;
 volatile uint8_t display_4 = 0;
 
 //Vcc measuring
-#define VCC_VALUES_SAMPLES 64
+#define VCC_VALUES_SAMPLES 128
 uint16_t Vcc_values[VCC_VALUES_SAMPLES];
-uint32_t Vcc_value = 0;
+uint16_t Vcc_value = 0;
+uint32_t Vcc_value_temp = 0;
+uint16_t ADC_result = 0;
 uint8_t Vcc_values_index = 0;
 uint8_t Vcc_value_valid = 0;
 
@@ -131,30 +132,36 @@ int main()
 		//Check if ADC conversion complete
 	    if (ADCSRA & (1 << ADIF))
 		{
-			//Clear flag
-			ADCSRA |= (1 << ADIF);			
-
-			//Get ADC result, calculate Vcc sample and store it in array
-			Vcc_values[Vcc_values_index++] = 1220L * 1023 / ((uint16_t)ADCL + ((uint16_t)(ADCH) << 8));
-
-			//If the end of array is reached
+			//Safe copy and clear flag
+			cli();
+			ADC_result = ((uint16_t)ADCL + ((uint16_t)(ADCH) << 8));
+			ADCSRA |= (1 << ADIF);
+			sei();
+			
+			//Calculate Vcc sample and store it in array
+			Vcc_values[Vcc_values_index++] = 1230L * 1024 / ADC_result;
+			
+			//Circular buffer
+			//If the end of array is reached, go back to the beginning
 			if (Vcc_values_index == VCC_VALUES_SAMPLES)
 			{
-				//Go back to the beginning
 				Vcc_values_index = 0;
-
-				//Set Vcc valid flag
-				Vcc_value_valid = 1;
 			}
-
+			
 			//Calculate Vcc by averaging the samples
-			Vcc_value = 0;
+			Vcc_value_temp = 0;
 			for (uint8_t i = 0; i < VCC_VALUES_SAMPLES; i++)
 			{
-				Vcc_value += Vcc_values[i];
+				Vcc_value_temp += Vcc_values[i];
 			}
-			Vcc_value /= VCC_VALUES_SAMPLES;
+			Vcc_value_temp /= VCC_VALUES_SAMPLES;
 
+			//Safe copy and set flag
+			cli();
+			Vcc_value = (uint16_t)Vcc_value_temp;
+			if (Vcc_values_index == 0) Vcc_value_valid = 1;
+			sei();
+			
 			//Debug - display Vcc
 			if (Vcc_value_valid) display_number((uint16_t)Vcc_value);			
 	    }
