@@ -78,6 +78,7 @@ volatile uint8_t watering_time_hour = 8;
 volatile uint8_t watering_days_passed = 0;
 volatile uint8_t watering_duration_seconds = 1;
 volatile uint8_t watering_duration_second_tenths = 0;
+volatile uint16_t watering_counter = 0;
 
 //7-segment display functions
 
@@ -523,9 +524,17 @@ ISR(TIMER0_OVF_vect)
 				if (time_hour == watering_time_hour)
 				{
 					//Start watering
-					//TODO
+					PUMP_ON;
+					watering_counter = (uint16_t)watering_duration_second_tenths * 25 + (uint16_t)watering_duration_seconds * 250 + 1;
 				}
 			}
 		}
+	}
+
+	//Watering
+	if (watering_counter)
+	{
+		watering_counter--;
+		if (watering_counter == 0) PUMP_OFF;
 	}
 }
