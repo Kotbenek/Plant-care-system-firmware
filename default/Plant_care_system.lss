@@ -3,27 +3,27 @@ Plant_care_system.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000860  00000000  00000000  00000094  2**1
+  0 .text         00000872  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         0000000a  00800060  00000860  000008f4  2**0
+  1 .data         0000000a  00800060  00000872  00000906  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000114  0080006a  0080006a  000008fe  2**0
+  2 .bss          00000114  0080006a  0080006a  00000910  2**0
                   ALLOC
-  3 .debug_aranges 00000020  00000000  00000000  000008fe  2**0
+  3 .debug_aranges 00000020  00000000  00000000  00000910  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_pubnames 00000209  00000000  00000000  0000091e  2**0
+  4 .debug_pubnames 00000209  00000000  00000000  00000930  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000365  00000000  00000000  00000b27  2**0
+  5 .debug_info   00000365  00000000  00000000  00000b39  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000115  00000000  00000000  00000e8c  2**0
+  6 .debug_abbrev 00000115  00000000  00000000  00000e9e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000071c  00000000  00000000  00000fa1  2**0
+  7 .debug_line   0000072c  00000000  00000000  00000fb3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000030  00000000  00000000  000016c0  2**2
+  8 .debug_frame  00000030  00000000  00000000  000016e0  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000002d4  00000000  00000000  000016f0  2**0
+  9 .debug_str    000002d4  00000000  00000000  00001710  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000043  00000000  00000000  000019c4  2**0
+ 10 .debug_loc    00000043  00000000  00000000  000019e4  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -63,7 +63,7 @@ Disassembly of section .text:
   60:	10 e0       	ldi	r17, 0x00	; 0
   62:	a0 e6       	ldi	r26, 0x60	; 96
   64:	b0 e0       	ldi	r27, 0x00	; 0
-  66:	e0 e6       	ldi	r30, 0x60	; 96
+  66:	e2 e7       	ldi	r30, 0x72	; 114
   68:	f8 e0       	ldi	r31, 0x08	; 8
   6a:	02 c0       	rjmp	.+4      	; 0x70 <.do_copy_data_start>
 
@@ -90,7 +90,7 @@ Disassembly of section .text:
   82:	b1 07       	cpc	r27, r17
   84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
   86:	0e 94 49 00 	call	0x92	; 0x92 <main>
-  8a:	0c 94 2e 04 	jmp	0x85c	; 0x85c <_exit>
+  8a:	0c 94 37 04 	jmp	0x86e	; 0x86e <_exit>
 
 0000008e <__bad_interrupt>:
   8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -276,7 +276,7 @@ int main()
  12c:	78 e3       	ldi	r23, 0x38	; 56
  12e:	83 e1       	ldi	r24, 0x13	; 19
  130:	90 e0       	ldi	r25, 0x00	; 0
- 132:	0e 94 f1 03 	call	0x7e2	; 0x7e2 <__divmodsi4>
+ 132:	0e 94 fa 03 	call	0x7f4	; 0x7f4 <__divmodsi4>
  136:	f8 01       	movw	r30, r16
  138:	31 83       	std	Z+1, r19	; 0x01
  13a:	20 83       	st	Z, r18
@@ -706,33 +706,33 @@ inline void display_vcc()
  3e4:	90 91 6b 00 	lds	r25, 0x006B
  3e8:	68 ee       	ldi	r22, 0xE8	; 232
  3ea:	73 e0       	ldi	r23, 0x03	; 3
- 3ec:	0e 94 dd 03 	call	0x7ba	; 0x7ba <__udivmodhi4>
+ 3ec:	0e 94 e6 03 	call	0x7cc	; 0x7cc <__udivmodhi4>
  3f0:	cb 01       	movw	r24, r22
  3f2:	6a e0       	ldi	r22, 0x0A	; 10
  3f4:	70 e0       	ldi	r23, 0x00	; 0
- 3f6:	0e 94 dd 03 	call	0x7ba	; 0x7ba <__udivmodhi4>
+ 3f6:	0e 94 e6 03 	call	0x7cc	; 0x7cc <__udivmodhi4>
  3fa:	80 93 62 00 	sts	0x0062, r24
 		display_3 = Vcc_value / 100 % 10;
  3fe:	80 91 6a 00 	lds	r24, 0x006A
  402:	90 91 6b 00 	lds	r25, 0x006B
  406:	64 e6       	ldi	r22, 0x64	; 100
  408:	70 e0       	ldi	r23, 0x00	; 0
- 40a:	0e 94 dd 03 	call	0x7ba	; 0x7ba <__udivmodhi4>
+ 40a:	0e 94 e6 03 	call	0x7cc	; 0x7cc <__udivmodhi4>
  40e:	cb 01       	movw	r24, r22
  410:	6a e0       	ldi	r22, 0x0A	; 10
  412:	70 e0       	ldi	r23, 0x00	; 0
- 414:	0e 94 dd 03 	call	0x7ba	; 0x7ba <__udivmodhi4>
+ 414:	0e 94 e6 03 	call	0x7cc	; 0x7cc <__udivmodhi4>
  418:	80 93 63 00 	sts	0x0063, r24
 		display_4 = Vcc_value  / 10 % 10;
  41c:	80 91 6a 00 	lds	r24, 0x006A
  420:	90 91 6b 00 	lds	r25, 0x006B
  424:	6a e0       	ldi	r22, 0x0A	; 10
  426:	70 e0       	ldi	r23, 0x00	; 0
- 428:	0e 94 dd 03 	call	0x7ba	; 0x7ba <__udivmodhi4>
+ 428:	0e 94 e6 03 	call	0x7cc	; 0x7cc <__udivmodhi4>
  42c:	cb 01       	movw	r24, r22
  42e:	6a e0       	ldi	r22, 0x0A	; 10
  430:	70 e0       	ldi	r23, 0x00	; 0
- 432:	0e 94 dd 03 	call	0x7ba	; 0x7ba <__udivmodhi4>
+ 432:	0e 94 e6 03 	call	0x7cc	; 0x7cc <__udivmodhi4>
  436:	80 93 64 00 	sts	0x0064, r24
 
 		//125 * 4ms = 500ms delay
@@ -765,17 +765,17 @@ inline void display_watering_time_setting()
 	display_1 = watering_time_days / 10 % 10;
  454:	80 91 66 00 	lds	r24, 0x0066
  458:	6a e0       	ldi	r22, 0x0A	; 10
- 45a:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
- 45e:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 45a:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
+ 45e:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  462:	90 93 61 00 	sts	0x0061, r25
 	display_2 = watering_time_days % 10;
  466:	80 91 66 00 	lds	r24, 0x0066
- 46a:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 46a:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  46e:	90 93 62 00 	sts	0x0062, r25
 	display_3 = watering_time_hour / 10 % 10;
  472:	80 91 67 00 	lds	r24, 0x0067
- 476:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
- 47a:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 476:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
+ 47a:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  47e:	90 93 63 00 	sts	0x0063, r25
 	display_4 = watering_time_hour % 10;
  482:	80 91 67 00 	lds	r24, 0x0067
@@ -797,22 +797,22 @@ inline void display_watering_duration_setting()
 	display_1 = watering_duration_seconds / 100 % 10;
  490:	80 91 68 00 	lds	r24, 0x0068
  494:	64 e6       	ldi	r22, 0x64	; 100
- 496:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 496:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  49a:	6a e0       	ldi	r22, 0x0A	; 10
- 49c:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 49c:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  4a0:	90 93 61 00 	sts	0x0061, r25
 	display_2 = watering_duration_seconds / 10 % 10;
  4a4:	80 91 68 00 	lds	r24, 0x0068
- 4a8:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
- 4ac:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 4a8:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
+ 4ac:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  4b0:	90 93 62 00 	sts	0x0062, r25
 	display_3 = watering_duration_seconds % 10;
  4b4:	80 91 68 00 	lds	r24, 0x0068
- 4b8:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 4b8:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  4bc:	90 93 63 00 	sts	0x0063, r25
 	display_4 = watering_duration_second_tenths % 10;
  4c0:	80 91 7b 00 	lds	r24, 0x007B
- 4c4:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 4c4:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  4c8:	90 93 64 00 	sts	0x0064, r25
  4cc:	28 c0       	rjmp	.+80     	; 0x51e <__vector_11+0x184>
 	}
@@ -846,17 +846,17 @@ inline void display_time()
 	display_1 = time_hour / 10 % 10;
  4e6:	80 91 76 00 	lds	r24, 0x0076
  4ea:	6a e0       	ldi	r22, 0x0A	; 10
- 4ec:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
- 4f0:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 4ec:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
+ 4f0:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  4f4:	90 93 61 00 	sts	0x0061, r25
 	display_2 = time_hour % 10;
  4f8:	80 91 76 00 	lds	r24, 0x0076
- 4fc:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 4fc:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  500:	90 93 62 00 	sts	0x0062, r25
 	display_3 = time_minute / 10 % 10;
  504:	80 91 77 00 	lds	r24, 0x0077
- 508:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
- 50c:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <__udivmodqi4>
+ 508:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
+ 50c:	0e 94 da 03 	call	0x7b4	; 0x7b4 <__udivmodqi4>
  510:	90 93 63 00 	sts	0x0063, r25
 	display_4 = time_minute % 10;
  514:	80 91 77 00 	lds	r24, 0x0077
@@ -1175,7 +1175,7 @@ inline void display(uint8_t digit)
  6ca:	80 91 79 00 	lds	r24, 0x0079
  6ce:	8a 3f       	cpi	r24, 0xFA	; 250
  6d0:	09 f0       	breq	.+2      	; 0x6d4 <__vector_11+0x33a>
- 6d2:	42 c0       	rjmp	.+132    	; 0x758 <__vector_11+0x3be>
+ 6d2:	4b c0       	rjmp	.+150    	; 0x76a <__vector_11+0x3d0>
 	{
 		time_4_milliseconds = 0;
  6d4:	10 92 79 00 	sts	0x0079, r1
@@ -1186,226 +1186,235 @@ inline void display(uint8_t digit)
 		if (time_second == 60)
  6e2:	80 91 78 00 	lds	r24, 0x0078
  6e6:	8c 33       	cpi	r24, 0x3C	; 60
- 6e8:	b9 f5       	brne	.+110    	; 0x758 <__vector_11+0x3be>
+ 6e8:	09 f0       	breq	.+2      	; 0x6ec <__vector_11+0x352>
+ 6ea:	3f c0       	rjmp	.+126    	; 0x76a <__vector_11+0x3d0>
 		{
 			time_second = 0;
- 6ea:	10 92 78 00 	sts	0x0078, r1
+ 6ec:	10 92 78 00 	sts	0x0078, r1
 			time_minute++;
- 6ee:	80 91 77 00 	lds	r24, 0x0077
- 6f2:	8f 5f       	subi	r24, 0xFF	; 255
- 6f4:	80 93 77 00 	sts	0x0077, r24
+ 6f0:	80 91 77 00 	lds	r24, 0x0077
+ 6f4:	8f 5f       	subi	r24, 0xFF	; 255
+ 6f6:	80 93 77 00 	sts	0x0077, r24
 			if (time_minute == 60)
- 6f8:	80 91 77 00 	lds	r24, 0x0077
- 6fc:	8c 33       	cpi	r24, 0x3C	; 60
- 6fe:	61 f5       	brne	.+88     	; 0x758 <__vector_11+0x3be>
+ 6fa:	80 91 77 00 	lds	r24, 0x0077
+ 6fe:	8c 33       	cpi	r24, 0x3C	; 60
+ 700:	a1 f5       	brne	.+104    	; 0x76a <__vector_11+0x3d0>
 			{
 				time_minute = 0;
- 700:	10 92 77 00 	sts	0x0077, r1
+ 702:	10 92 77 00 	sts	0x0077, r1
 				time_hour++;
- 704:	80 91 76 00 	lds	r24, 0x0076
- 708:	8f 5f       	subi	r24, 0xFF	; 255
- 70a:	80 93 76 00 	sts	0x0076, r24
+ 706:	80 91 76 00 	lds	r24, 0x0076
+ 70a:	8f 5f       	subi	r24, 0xFF	; 255
+ 70c:	80 93 76 00 	sts	0x0076, r24
 				if (time_hour == 24)
- 70e:	80 91 76 00 	lds	r24, 0x0076
- 712:	88 31       	cpi	r24, 0x18	; 24
- 714:	39 f4       	brne	.+14     	; 0x724 <__vector_11+0x38a>
+ 710:	80 91 76 00 	lds	r24, 0x0076
+ 714:	88 31       	cpi	r24, 0x18	; 24
+ 716:	39 f4       	brne	.+14     	; 0x726 <__vector_11+0x38c>
 				{
 					time_hour = 0;
- 716:	10 92 76 00 	sts	0x0076, r1
+ 718:	10 92 76 00 	sts	0x0076, r1
 
 					watering_days_passed++;
- 71a:	80 91 7a 00 	lds	r24, 0x007A
- 71e:	8f 5f       	subi	r24, 0xFF	; 255
- 720:	80 93 7a 00 	sts	0x007A, r24
+ 71c:	80 91 7a 00 	lds	r24, 0x007A
+ 720:	8f 5f       	subi	r24, 0xFF	; 255
+ 722:	80 93 7a 00 	sts	0x007A, r24
 				}
 
 				if (time_hour == watering_time_hour)
- 724:	90 91 76 00 	lds	r25, 0x0076
- 728:	80 91 67 00 	lds	r24, 0x0067
- 72c:	98 17       	cp	r25, r24
- 72e:	a1 f4       	brne	.+40     	; 0x758 <__vector_11+0x3be>
+ 726:	90 91 76 00 	lds	r25, 0x0076
+ 72a:	80 91 67 00 	lds	r24, 0x0067
+ 72e:	98 17       	cp	r25, r24
+ 730:	e1 f4       	brne	.+56     	; 0x76a <__vector_11+0x3d0>
 				{
-					//Start watering
-					PUMP_ON;
- 730:	c1 9a       	sbi	0x18, 1	; 24
-					watering_counter = (uint16_t)watering_duration_second_tenths * 25 + (uint16_t)watering_duration_seconds * 250 + 1;
- 732:	80 91 7b 00 	lds	r24, 0x007B
- 736:	20 91 68 00 	lds	r18, 0x0068
- 73a:	49 e1       	ldi	r20, 0x19	; 25
- 73c:	84 9f       	mul	r24, r20
- 73e:	c0 01       	movw	r24, r0
- 740:	11 24       	eor	r1, r1
- 742:	4a ef       	ldi	r20, 0xFA	; 250
- 744:	24 9f       	mul	r18, r20
- 746:	90 01       	movw	r18, r0
- 748:	11 24       	eor	r1, r1
- 74a:	82 0f       	add	r24, r18
- 74c:	93 1f       	adc	r25, r19
- 74e:	01 96       	adiw	r24, 0x01	; 1
- 750:	90 93 7d 00 	sts	0x007D, r25
- 754:	80 93 7c 00 	sts	0x007C, r24
+					if (watering_time_days == watering_days_passed)
+ 732:	90 91 66 00 	lds	r25, 0x0066
+ 736:	80 91 7a 00 	lds	r24, 0x007A
+ 73a:	98 17       	cp	r25, r24
+ 73c:	b1 f4       	brne	.+44     	; 0x76a <__vector_11+0x3d0>
+					{
+						//Start watering
+						PUMP_ON;
+ 73e:	c1 9a       	sbi	0x18, 1	; 24
+						watering_counter = (uint16_t)watering_duration_second_tenths * 25 + (uint16_t)watering_duration_seconds * 250 + 1;
+ 740:	80 91 7b 00 	lds	r24, 0x007B
+ 744:	20 91 68 00 	lds	r18, 0x0068
+ 748:	49 e1       	ldi	r20, 0x19	; 25
+ 74a:	84 9f       	mul	r24, r20
+ 74c:	c0 01       	movw	r24, r0
+ 74e:	11 24       	eor	r1, r1
+ 750:	4a ef       	ldi	r20, 0xFA	; 250
+ 752:	24 9f       	mul	r18, r20
+ 754:	90 01       	movw	r18, r0
+ 756:	11 24       	eor	r1, r1
+ 758:	82 0f       	add	r24, r18
+ 75a:	93 1f       	adc	r25, r19
+ 75c:	01 96       	adiw	r24, 0x01	; 1
+ 75e:	90 93 7d 00 	sts	0x007D, r25
+ 762:	80 93 7c 00 	sts	0x007C, r24
+						watering_days_passed = 0;
+ 766:	10 92 7a 00 	sts	0x007A, r1
 			}
 		}
 	}
 
 	//Watering
 	if (watering_counter)
- 758:	80 91 7c 00 	lds	r24, 0x007C
- 75c:	90 91 7d 00 	lds	r25, 0x007D
- 760:	89 2b       	or	r24, r25
- 762:	81 f0       	breq	.+32     	; 0x784 <__vector_11+0x3ea>
+ 76a:	80 91 7c 00 	lds	r24, 0x007C
+ 76e:	90 91 7d 00 	lds	r25, 0x007D
+ 772:	89 2b       	or	r24, r25
+ 774:	81 f0       	breq	.+32     	; 0x796 <__vector_11+0x3fc>
 	{
 		watering_counter--;
- 764:	80 91 7c 00 	lds	r24, 0x007C
- 768:	90 91 7d 00 	lds	r25, 0x007D
- 76c:	01 97       	sbiw	r24, 0x01	; 1
- 76e:	90 93 7d 00 	sts	0x007D, r25
- 772:	80 93 7c 00 	sts	0x007C, r24
-		if (watering_counter == 0) PUMP_OFF;
  776:	80 91 7c 00 	lds	r24, 0x007C
  77a:	90 91 7d 00 	lds	r25, 0x007D
- 77e:	89 2b       	or	r24, r25
- 780:	09 f4       	brne	.+2      	; 0x784 <__vector_11+0x3ea>
- 782:	c1 98       	cbi	0x18, 1	; 24
+ 77e:	01 97       	sbiw	r24, 0x01	; 1
+ 780:	90 93 7d 00 	sts	0x007D, r25
+ 784:	80 93 7c 00 	sts	0x007C, r24
+		if (watering_counter == 0) PUMP_OFF;
+ 788:	80 91 7c 00 	lds	r24, 0x007C
+ 78c:	90 91 7d 00 	lds	r25, 0x007D
+ 790:	89 2b       	or	r24, r25
+ 792:	09 f4       	brne	.+2      	; 0x796 <__vector_11+0x3fc>
+ 794:	c1 98       	cbi	0x18, 1	; 24
 	}
 }
- 784:	bf 91       	pop	r27
- 786:	af 91       	pop	r26
- 788:	9f 91       	pop	r25
- 78a:	8f 91       	pop	r24
- 78c:	7f 91       	pop	r23
- 78e:	6f 91       	pop	r22
- 790:	5f 91       	pop	r21
- 792:	4f 91       	pop	r20
- 794:	3f 91       	pop	r19
- 796:	2f 91       	pop	r18
- 798:	0f 90       	pop	r0
- 79a:	0f be       	out	0x3f, r0	; 63
- 79c:	0f 90       	pop	r0
- 79e:	1f 90       	pop	r1
- 7a0:	18 95       	reti
+ 796:	bf 91       	pop	r27
+ 798:	af 91       	pop	r26
+ 79a:	9f 91       	pop	r25
+ 79c:	8f 91       	pop	r24
+ 79e:	7f 91       	pop	r23
+ 7a0:	6f 91       	pop	r22
+ 7a2:	5f 91       	pop	r21
+ 7a4:	4f 91       	pop	r20
+ 7a6:	3f 91       	pop	r19
+ 7a8:	2f 91       	pop	r18
+ 7aa:	0f 90       	pop	r0
+ 7ac:	0f be       	out	0x3f, r0	; 63
+ 7ae:	0f 90       	pop	r0
+ 7b0:	1f 90       	pop	r1
+ 7b2:	18 95       	reti
 
-000007a2 <__udivmodqi4>:
- 7a2:	99 1b       	sub	r25, r25
- 7a4:	79 e0       	ldi	r23, 0x09	; 9
- 7a6:	04 c0       	rjmp	.+8      	; 0x7b0 <__udivmodqi4_ep>
+000007b4 <__udivmodqi4>:
+ 7b4:	99 1b       	sub	r25, r25
+ 7b6:	79 e0       	ldi	r23, 0x09	; 9
+ 7b8:	04 c0       	rjmp	.+8      	; 0x7c2 <__udivmodqi4_ep>
 
-000007a8 <__udivmodqi4_loop>:
- 7a8:	99 1f       	adc	r25, r25
- 7aa:	96 17       	cp	r25, r22
- 7ac:	08 f0       	brcs	.+2      	; 0x7b0 <__udivmodqi4_ep>
- 7ae:	96 1b       	sub	r25, r22
+000007ba <__udivmodqi4_loop>:
+ 7ba:	99 1f       	adc	r25, r25
+ 7bc:	96 17       	cp	r25, r22
+ 7be:	08 f0       	brcs	.+2      	; 0x7c2 <__udivmodqi4_ep>
+ 7c0:	96 1b       	sub	r25, r22
 
-000007b0 <__udivmodqi4_ep>:
- 7b0:	88 1f       	adc	r24, r24
- 7b2:	7a 95       	dec	r23
- 7b4:	c9 f7       	brne	.-14     	; 0x7a8 <__udivmodqi4_loop>
- 7b6:	80 95       	com	r24
- 7b8:	08 95       	ret
+000007c2 <__udivmodqi4_ep>:
+ 7c2:	88 1f       	adc	r24, r24
+ 7c4:	7a 95       	dec	r23
+ 7c6:	c9 f7       	brne	.-14     	; 0x7ba <__udivmodqi4_loop>
+ 7c8:	80 95       	com	r24
+ 7ca:	08 95       	ret
 
-000007ba <__udivmodhi4>:
- 7ba:	aa 1b       	sub	r26, r26
- 7bc:	bb 1b       	sub	r27, r27
- 7be:	51 e1       	ldi	r21, 0x11	; 17
- 7c0:	07 c0       	rjmp	.+14     	; 0x7d0 <__udivmodhi4_ep>
+000007cc <__udivmodhi4>:
+ 7cc:	aa 1b       	sub	r26, r26
+ 7ce:	bb 1b       	sub	r27, r27
+ 7d0:	51 e1       	ldi	r21, 0x11	; 17
+ 7d2:	07 c0       	rjmp	.+14     	; 0x7e2 <__udivmodhi4_ep>
 
-000007c2 <__udivmodhi4_loop>:
- 7c2:	aa 1f       	adc	r26, r26
- 7c4:	bb 1f       	adc	r27, r27
- 7c6:	a6 17       	cp	r26, r22
- 7c8:	b7 07       	cpc	r27, r23
- 7ca:	10 f0       	brcs	.+4      	; 0x7d0 <__udivmodhi4_ep>
- 7cc:	a6 1b       	sub	r26, r22
- 7ce:	b7 0b       	sbc	r27, r23
+000007d4 <__udivmodhi4_loop>:
+ 7d4:	aa 1f       	adc	r26, r26
+ 7d6:	bb 1f       	adc	r27, r27
+ 7d8:	a6 17       	cp	r26, r22
+ 7da:	b7 07       	cpc	r27, r23
+ 7dc:	10 f0       	brcs	.+4      	; 0x7e2 <__udivmodhi4_ep>
+ 7de:	a6 1b       	sub	r26, r22
+ 7e0:	b7 0b       	sbc	r27, r23
 
-000007d0 <__udivmodhi4_ep>:
- 7d0:	88 1f       	adc	r24, r24
- 7d2:	99 1f       	adc	r25, r25
- 7d4:	5a 95       	dec	r21
- 7d6:	a9 f7       	brne	.-22     	; 0x7c2 <__udivmodhi4_loop>
- 7d8:	80 95       	com	r24
- 7da:	90 95       	com	r25
- 7dc:	bc 01       	movw	r22, r24
- 7de:	cd 01       	movw	r24, r26
- 7e0:	08 95       	ret
+000007e2 <__udivmodhi4_ep>:
+ 7e2:	88 1f       	adc	r24, r24
+ 7e4:	99 1f       	adc	r25, r25
+ 7e6:	5a 95       	dec	r21
+ 7e8:	a9 f7       	brne	.-22     	; 0x7d4 <__udivmodhi4_loop>
+ 7ea:	80 95       	com	r24
+ 7ec:	90 95       	com	r25
+ 7ee:	bc 01       	movw	r22, r24
+ 7f0:	cd 01       	movw	r24, r26
+ 7f2:	08 95       	ret
 
-000007e2 <__divmodsi4>:
- 7e2:	97 fb       	bst	r25, 7
- 7e4:	09 2e       	mov	r0, r25
- 7e6:	05 26       	eor	r0, r21
- 7e8:	0e d0       	rcall	.+28     	; 0x806 <__divmodsi4_neg1>
- 7ea:	57 fd       	sbrc	r21, 7
- 7ec:	04 d0       	rcall	.+8      	; 0x7f6 <__divmodsi4_neg2>
- 7ee:	14 d0       	rcall	.+40     	; 0x818 <__udivmodsi4>
- 7f0:	0a d0       	rcall	.+20     	; 0x806 <__divmodsi4_neg1>
- 7f2:	00 1c       	adc	r0, r0
- 7f4:	38 f4       	brcc	.+14     	; 0x804 <__divmodsi4_exit>
+000007f4 <__divmodsi4>:
+ 7f4:	97 fb       	bst	r25, 7
+ 7f6:	09 2e       	mov	r0, r25
+ 7f8:	05 26       	eor	r0, r21
+ 7fa:	0e d0       	rcall	.+28     	; 0x818 <__divmodsi4_neg1>
+ 7fc:	57 fd       	sbrc	r21, 7
+ 7fe:	04 d0       	rcall	.+8      	; 0x808 <__divmodsi4_neg2>
+ 800:	14 d0       	rcall	.+40     	; 0x82a <__udivmodsi4>
+ 802:	0a d0       	rcall	.+20     	; 0x818 <__divmodsi4_neg1>
+ 804:	00 1c       	adc	r0, r0
+ 806:	38 f4       	brcc	.+14     	; 0x816 <__divmodsi4_exit>
 
-000007f6 <__divmodsi4_neg2>:
- 7f6:	50 95       	com	r21
- 7f8:	40 95       	com	r20
- 7fa:	30 95       	com	r19
- 7fc:	21 95       	neg	r18
- 7fe:	3f 4f       	sbci	r19, 0xFF	; 255
- 800:	4f 4f       	sbci	r20, 0xFF	; 255
- 802:	5f 4f       	sbci	r21, 0xFF	; 255
+00000808 <__divmodsi4_neg2>:
+ 808:	50 95       	com	r21
+ 80a:	40 95       	com	r20
+ 80c:	30 95       	com	r19
+ 80e:	21 95       	neg	r18
+ 810:	3f 4f       	sbci	r19, 0xFF	; 255
+ 812:	4f 4f       	sbci	r20, 0xFF	; 255
+ 814:	5f 4f       	sbci	r21, 0xFF	; 255
 
-00000804 <__divmodsi4_exit>:
- 804:	08 95       	ret
-
-00000806 <__divmodsi4_neg1>:
- 806:	f6 f7       	brtc	.-4      	; 0x804 <__divmodsi4_exit>
- 808:	90 95       	com	r25
- 80a:	80 95       	com	r24
- 80c:	70 95       	com	r23
- 80e:	61 95       	neg	r22
- 810:	7f 4f       	sbci	r23, 0xFF	; 255
- 812:	8f 4f       	sbci	r24, 0xFF	; 255
- 814:	9f 4f       	sbci	r25, 0xFF	; 255
+00000816 <__divmodsi4_exit>:
  816:	08 95       	ret
 
-00000818 <__udivmodsi4>:
- 818:	a1 e2       	ldi	r26, 0x21	; 33
- 81a:	1a 2e       	mov	r1, r26
- 81c:	aa 1b       	sub	r26, r26
- 81e:	bb 1b       	sub	r27, r27
- 820:	fd 01       	movw	r30, r26
- 822:	0d c0       	rjmp	.+26     	; 0x83e <__udivmodsi4_ep>
+00000818 <__divmodsi4_neg1>:
+ 818:	f6 f7       	brtc	.-4      	; 0x816 <__divmodsi4_exit>
+ 81a:	90 95       	com	r25
+ 81c:	80 95       	com	r24
+ 81e:	70 95       	com	r23
+ 820:	61 95       	neg	r22
+ 822:	7f 4f       	sbci	r23, 0xFF	; 255
+ 824:	8f 4f       	sbci	r24, 0xFF	; 255
+ 826:	9f 4f       	sbci	r25, 0xFF	; 255
+ 828:	08 95       	ret
 
-00000824 <__udivmodsi4_loop>:
- 824:	aa 1f       	adc	r26, r26
- 826:	bb 1f       	adc	r27, r27
- 828:	ee 1f       	adc	r30, r30
- 82a:	ff 1f       	adc	r31, r31
- 82c:	a2 17       	cp	r26, r18
- 82e:	b3 07       	cpc	r27, r19
- 830:	e4 07       	cpc	r30, r20
- 832:	f5 07       	cpc	r31, r21
- 834:	20 f0       	brcs	.+8      	; 0x83e <__udivmodsi4_ep>
- 836:	a2 1b       	sub	r26, r18
- 838:	b3 0b       	sbc	r27, r19
- 83a:	e4 0b       	sbc	r30, r20
- 83c:	f5 0b       	sbc	r31, r21
+0000082a <__udivmodsi4>:
+ 82a:	a1 e2       	ldi	r26, 0x21	; 33
+ 82c:	1a 2e       	mov	r1, r26
+ 82e:	aa 1b       	sub	r26, r26
+ 830:	bb 1b       	sub	r27, r27
+ 832:	fd 01       	movw	r30, r26
+ 834:	0d c0       	rjmp	.+26     	; 0x850 <__udivmodsi4_ep>
 
-0000083e <__udivmodsi4_ep>:
- 83e:	66 1f       	adc	r22, r22
- 840:	77 1f       	adc	r23, r23
- 842:	88 1f       	adc	r24, r24
- 844:	99 1f       	adc	r25, r25
- 846:	1a 94       	dec	r1
- 848:	69 f7       	brne	.-38     	; 0x824 <__udivmodsi4_loop>
- 84a:	60 95       	com	r22
- 84c:	70 95       	com	r23
- 84e:	80 95       	com	r24
- 850:	90 95       	com	r25
- 852:	9b 01       	movw	r18, r22
- 854:	ac 01       	movw	r20, r24
- 856:	bd 01       	movw	r22, r26
- 858:	cf 01       	movw	r24, r30
- 85a:	08 95       	ret
+00000836 <__udivmodsi4_loop>:
+ 836:	aa 1f       	adc	r26, r26
+ 838:	bb 1f       	adc	r27, r27
+ 83a:	ee 1f       	adc	r30, r30
+ 83c:	ff 1f       	adc	r31, r31
+ 83e:	a2 17       	cp	r26, r18
+ 840:	b3 07       	cpc	r27, r19
+ 842:	e4 07       	cpc	r30, r20
+ 844:	f5 07       	cpc	r31, r21
+ 846:	20 f0       	brcs	.+8      	; 0x850 <__udivmodsi4_ep>
+ 848:	a2 1b       	sub	r26, r18
+ 84a:	b3 0b       	sbc	r27, r19
+ 84c:	e4 0b       	sbc	r30, r20
+ 84e:	f5 0b       	sbc	r31, r21
 
-0000085c <_exit>:
- 85c:	f8 94       	cli
+00000850 <__udivmodsi4_ep>:
+ 850:	66 1f       	adc	r22, r22
+ 852:	77 1f       	adc	r23, r23
+ 854:	88 1f       	adc	r24, r24
+ 856:	99 1f       	adc	r25, r25
+ 858:	1a 94       	dec	r1
+ 85a:	69 f7       	brne	.-38     	; 0x836 <__udivmodsi4_loop>
+ 85c:	60 95       	com	r22
+ 85e:	70 95       	com	r23
+ 860:	80 95       	com	r24
+ 862:	90 95       	com	r25
+ 864:	9b 01       	movw	r18, r22
+ 866:	ac 01       	movw	r20, r24
+ 868:	bd 01       	movw	r22, r26
+ 86a:	cf 01       	movw	r24, r30
+ 86c:	08 95       	ret
 
-0000085e <__stop_program>:
- 85e:	ff cf       	rjmp	.-2      	; 0x85e <__stop_program>
+0000086e <_exit>:
+ 86e:	f8 94       	cli
+
+00000870 <__stop_program>:
+ 870:	ff cf       	rjmp	.-2      	; 0x870 <__stop_program>

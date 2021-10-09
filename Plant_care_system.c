@@ -523,9 +523,13 @@ ISR(TIMER0_OVF_vect)
 
 				if (time_hour == watering_time_hour)
 				{
-					//Start watering
-					PUMP_ON;
-					watering_counter = (uint16_t)watering_duration_second_tenths * 25 + (uint16_t)watering_duration_seconds * 250 + 1;
+					if (watering_time_days == watering_days_passed)
+					{
+						//Start watering
+						PUMP_ON;
+						watering_counter = (uint16_t)watering_duration_second_tenths * 25 + (uint16_t)watering_duration_seconds * 250 + 1;
+						watering_days_passed = 0;
+					}
 				}
 			}
 		}
