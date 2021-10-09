@@ -5,17 +5,18 @@
 #include <avr/interrupt.h>
 
 //7-segment display digit macros
-#define DISPLAY_0          PORTD = 0b00010100
-#define DISPLAY_1          PORTD = 0b01110111
-#define DISPLAY_2          PORTD = 0b01001100
-#define DISPLAY_3          PORTD = 0b01000101
-#define DISPLAY_4          PORTD = 0b00100111
-#define DISPLAY_5          PORTD = 0b10000101
-#define DISPLAY_6          PORTD = 0b10000100
-#define DISPLAY_7          PORTD = 0b01010111
-#define DISPLAY_8          PORTD = 0b00000100
-#define DISPLAY_9          PORTD = 0b00000101
-#define DISPLAY_CLEAR      PORTD = 0b11111111
+#define DISPLAY_0          PORTD =  0b00010100
+#define DISPLAY_1          PORTD =  0b01110111
+#define DISPLAY_2          PORTD =  0b01001100
+#define DISPLAY_3          PORTD =  0b01000101
+#define DISPLAY_4          PORTD =  0b00100111
+#define DISPLAY_5          PORTD =  0b10000101
+#define DISPLAY_6          PORTD =  0b10000100
+#define DISPLAY_7          PORTD =  0b01010111
+#define DISPLAY_8          PORTD =  0b00000100
+#define DISPLAY_9          PORTD =  0b00000101
+#define DISPLAY_CLEAR      PORTD =  0b11111111
+#define DISPLAY_SHOW_DOT   PORTD &= 0b11111011
 
 #define DISPLAY_DIGIT1     PORTC |= (1 << 3)
 #define DISPLAY_DIGIT2     PORTC |= (1 << 2)
@@ -39,32 +40,35 @@
 
 //7-segment display variables
 volatile uint8_t display_n = 1;
-volatile uint8_t display_1 = 0;
-volatile uint8_t display_2 = 0;
-volatile uint8_t display_3 = 0;
-volatile uint8_t display_4 = 0;
+volatile uint8_t display_1 = 10;
+volatile uint8_t display_2 = 10;
+volatile uint8_t display_3 = 10;
+volatile uint8_t display_4 = 10;
 
 //Vcc measuring
 #define VCC_VALUES_SAMPLES 128
 uint16_t Vcc_values[VCC_VALUES_SAMPLES];
-uint16_t Vcc_value = 0;
+volatile uint16_t Vcc_value = 0;
 uint32_t Vcc_value_temp = 0;
 uint16_t ADC_result = 0;
 uint8_t Vcc_values_index = 0;
 uint8_t Vcc_value_valid = 0;
 
-//Debug - LED test
-volatile uint16_t counter = 0;
+//Menu
+//LED_2 LED_1 LED_0 - description
+//000 - displaying Vcc ( V.vv)
+//001 - time setting (HH:MM)
+//010 - watering time setting (DD HH) - DD is every X days, HH is the hour of watering
+//011 - watering duration setting (SSS.f) - SSS is seconds, f is s/10
+//100 - lamp time on - (HH:MM)
+//101 - lamp time off - (HH:MM)
+//110 - displaying time - (HH:MM)
+//111 - displaying watering countdown - (HH:MM)
+volatile uint8_t menu_option = 0;
+volatile uint8_t menu_button_delay_counter = 0;
+volatile uint8_t display_vcc_delay_counter = 32; //Initial delay of 32 * 4 = 128ms
 
 //7-segment display functions
-
-inline void display_number(uint16_t value)
-{
-	display_1 = value / 1000 % 10;
-	display_2 = value / 100 % 10;
-	display_3 = value / 10 % 10;
-	display_4 = value % 10;
-}
 
 inline uint8_t display_digit()
 {
@@ -88,6 +92,23 @@ inline void display(uint8_t digit)
 	else if (digit == 8) DISPLAY_8;
 	else if (digit == 9) DISPLAY_9;
 	else DISPLAY_CLEAR;
+}
+
+//Menu display functions
+
+inline void display_vcc()
+{
+	display_vcc_delay_counter--;	
+	if (display_vcc_delay_counter == 0)
+	{
+		display_1 = 10;
+		display_2 = Vcc_value / 1000 % 10;
+		display_3 = Vcc_value / 100 % 10;
+		display_4 = Vcc_value  / 10 % 10;
+
+		//125 * 4ms = 500ms delay
+		display_vcc_delay_counter = 125;
+	}
 }
 
 int main()
@@ -160,16 +181,21 @@ int main()
 			cli();
 			Vcc_value = (uint16_t)Vcc_value_temp;
 			if (Vcc_values_index == 0) Vcc_value_valid = 1;
-			sei();
-			
-			//Debug - display Vcc
-			if (Vcc_value_valid) display_number((uint16_t)Vcc_value);			
+			sei();		
 	    }
 
 		//Menu button
 		if (!(PINA & (1<<PA4)))
 		{
-			
+			//Safe menu option change
+			cli();
+			menu_option++;
+			if (menu_option == 8) menu_option = 0;
+			sei();
+
+			//125 * 4ms = 500ms delay
+			menu_button_delay_counter = 125;
+			while (menu_button_delay_counter);
 		}
 		//M+ button
 		if (!(PINA & (1<<PA2)))
@@ -197,60 +223,131 @@ int main()
 //250Hz interrupt
 ISR(TIMER0_OVF_vect)
 {
-	//7-segment display
+	//7-segment display - turn off
 	DISPLAY_DIGIT_NONE;
 
-	display(display_digit());
+	//Menu display handling
+	if (menu_option == 0)
+	{
+		display_vcc();
+	}
+	else if (menu_option == 1)
+	{
+		//TODO
+	}
+	else if (menu_option == 2)
+	{
+		//TODO
+	}
+	else if (menu_option == 3)
+	{
+		//TODO
+	}
+	else if (menu_option == 4)
+	{
+		//TODO
+	}
+	else if (menu_option == 5)
+	{
+		//TODO
+	}
+	else if (menu_option == 6)
+	{
+		//TODO
+	}
+	else if (menu_option == 7)
+	{
+		//TODO
+	}
 
+	//7-segment display - set digit
+	display(display_digit());
+	
+	//Display dot according to the selected menu option
+	if (menu_option == 0)
+	{
+		if (display_n == 1) DISPLAY_SHOW_DOT;
+	}
+	else if (menu_option == 1)
+	{
+		if (display_n == 2) DISPLAY_SHOW_DOT;
+	}
+	else if (menu_option == 2)
+	{
+		//No dot
+	}
+	else if (menu_option == 3)
+	{
+		if (display_n == 3) DISPLAY_SHOW_DOT;
+	}
+	else if (menu_option == 4)
+	{
+		if (display_n == 2) DISPLAY_SHOW_DOT;
+	}
+	else if (menu_option == 5)
+	{
+		if (display_n == 2) DISPLAY_SHOW_DOT;
+	}
+	else if (menu_option == 6)
+	{
+		if (display_n == 2) DISPLAY_SHOW_DOT;
+	}
+	else if (menu_option == 7)
+	{
+		if (display_n == 2) DISPLAY_SHOW_DOT;
+	}
+
+	//7-segment display - turn on digit
 	if      (display_n == 1) DISPLAY_DIGIT1;
 	else if (display_n == 2) DISPLAY_DIGIT2;
 	else if (display_n == 3) DISPLAY_DIGIT3;
 	else if (display_n == 4) DISPLAY_DIGIT4;
 
+	//7-segment display - move to next digit
 	display_n++;
 	if (display_n == 5) display_n = 1;
+	
+	//Decrement delay counter if it's greater than zero
+	if (menu_button_delay_counter) menu_button_delay_counter--;
 
-	//Debug - LED test
-	counter += 4;
-	if (counter == 8000) counter = 0;
-
-	if (counter < 1000)
+	//Menu option LEDs
+	if (menu_option == 0)
 	{
 		LED2_OFF;
 		LED1_OFF;
 		LED0_OFF;
 	}
-	else if (counter < 2000)
+	else if (menu_option == 1)
 	{
 		LED2_OFF;
 		LED1_OFF;
 		LED0_ON;
 	}
-	else if (counter < 3000)
+	else if (menu_option == 2)
 	{
 		LED2_OFF;
 		LED1_ON;
 		LED0_OFF;
 	}
-	else if (counter < 4000)
+	else if (menu_option == 3)
 	{
 		LED2_OFF;
 		LED1_ON;
 		LED0_ON;
 	}
-	else if (counter < 5000)
+	else if (menu_option == 4)
 	{
 		LED2_ON;
 		LED1_OFF;
 		LED0_OFF;
 	}
-	else if (counter < 6000)
+	else if (menu_option == 5)
 	{
 		LED2_ON;
 		LED1_OFF;
 		LED0_ON;
 	}
-	else if (counter < 7000)
+	else if (menu_option == 6)
 	{
 		LED2_ON;
 		LED1_ON;
