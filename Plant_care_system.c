@@ -76,6 +76,8 @@ volatile uint8_t time_4_milliseconds = 0;
 volatile uint8_t watering_time_days = 1;
 volatile uint8_t watering_time_hour = 8;
 volatile uint8_t watering_days_passed = 0;
+volatile uint8_t watering_duration_seconds = 1;
+volatile uint8_t watering_duration_second_tenths = 0;
 
 //7-segment display functions
 
@@ -138,7 +140,10 @@ inline void display_watering_time_setting()
 
 inline void display_watering_duration_setting()
 {
-	//TODO
+	display_1 = watering_duration_seconds / 100 % 10;
+	display_2 = watering_duration_seconds / 10 % 10;
+	display_3 = watering_duration_seconds % 10;
+	display_4 = watering_duration_second_tenths % 10;
 }
 
 inline void display_lamp_time_on()
@@ -258,6 +263,11 @@ int main()
 				watering_time_days++;
 				if (watering_time_days == 100) watering_time_days = 1;
 			}
+			else if (menu_option == 3)
+			{
+				watering_duration_seconds++;
+				if (watering_duration_seconds == 0) watering_duration_seconds++;
+			}
 			sei();
 
 			//50 * 4ms = 200ms delay
@@ -278,6 +288,11 @@ int main()
 			{
 				watering_time_days--;
 				if (watering_time_days == 0) watering_time_days = 99;
+			}
+			else if (menu_option == 3)
+			{
+				watering_duration_seconds--;
+				if (watering_duration_seconds == 0) watering_duration_seconds = 255;
 			}
 			sei();
 
@@ -302,6 +317,11 @@ int main()
 				watering_time_hour++;
 				if (watering_time_hour == 24) watering_time_hour = 0;
 			}
+			else if (menu_option == 3)
+			{
+				watering_duration_second_tenths++;
+				if (watering_duration_second_tenths == 10) watering_duration_second_tenths = 0;
+			}
 			sei();
 
 			//50 * 4ms = 200ms delay
@@ -324,6 +344,11 @@ int main()
 			{
 				watering_time_hour--;
 				if (watering_time_hour == 255) watering_time_hour = 23;
+			}
+			else if (menu_option == 3)
+			{
+				watering_duration_second_tenths--;
+				if (watering_duration_second_tenths == 255) watering_duration_second_tenths = 9;
 			}
 			sei();
 
