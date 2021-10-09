@@ -73,6 +73,9 @@ volatile uint8_t time_hour = 0;
 volatile uint8_t time_minute = 0;
 volatile uint8_t time_second = 0;
 volatile uint8_t time_4_milliseconds = 0;
+volatile uint8_t watering_time_days = 1;
+volatile uint8_t watering_time_hour = 8;
+volatile uint8_t watering_days_passed = 0;
 
 //7-segment display functions
 
@@ -127,7 +130,10 @@ inline void display_time()
 
 inline void display_watering_time_setting()
 {
-	//TODO
+	display_1 = watering_time_days / 10 % 10;
+	display_2 = watering_time_days % 10;
+	display_3 = watering_time_hour / 10 % 10;
+	display_4 = watering_time_hour % 10;
 }
 
 inline void display_watering_duration_setting()
@@ -247,6 +253,11 @@ int main()
 				time_hour++;
 				if (time_hour == 24) time_hour = 0;
 			}
+			else if (menu_option == 2)
+			{
+				watering_time_days++;
+				if (watering_time_days == 100) watering_time_days = 1;
+			}
 			sei();
 
 			//50 * 4ms = 200ms delay
@@ -262,6 +273,11 @@ int main()
 			{
 				time_hour--;
 				if (time_hour == 255) time_hour = 23;
+			}
+			else if (menu_option == 2)
+			{
+				watering_time_days--;
+				if (watering_time_days == 0) watering_time_days = 99;
 			}
 			sei();
 
@@ -281,6 +297,11 @@ int main()
 				time_second = 0;
 				time_4_milliseconds = 0;
 			}
+			else if (menu_option == 2)
+			{
+				watering_time_hour++;
+				if (watering_time_hour == 24) watering_time_hour = 0;
+			}
 			sei();
 
 			//50 * 4ms = 200ms delay
@@ -298,6 +319,11 @@ int main()
 				if (time_minute == 255) time_minute = 59;
 				time_second = 0;
 				time_4_milliseconds = 0;
+			}
+			else if (menu_option == 2)
+			{
+				watering_time_hour--;
+				if (watering_time_hour == 255) watering_time_hour = 23;
 			}
 			sei();
 
@@ -465,6 +491,14 @@ ISR(TIMER0_OVF_vect)
 				if (time_hour == 24)
 				{
 					time_hour = 0;
+
+					watering_days_passed++;
+				}
+
+				if (time_hour == watering_time_hour)
+				{
+					//Start watering
+					//TODO
 				}
 			}
 		}
