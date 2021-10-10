@@ -56,17 +56,19 @@ volatile uint8_t Vcc_value_valid = 0;
 
 //Menu
 //LED_2 LED_1 LED_0 - description
-//000 - displaying Vcc ( V.vv)
+//000 - menu inactive
 //001 - time setting (HH:MM)
 //010 - watering time setting (DD HH) - DD is every X days, HH is the hour of watering
 //011 - watering duration setting (SSS.f) - SSS is seconds, f is s/10
 //100 - lamp time on - (HH:MM)
 //101 - lamp time off - (HH:MM)
 //110 - displaying time - (HH:MM)
-//111 - displaying watering countdown - (HH:MM)
+//111 - displaying Vcc ( V.vv)
 volatile uint8_t menu_option = 0;
 volatile uint8_t menu_button_delay_counter = 0;
 volatile uint8_t display_vcc_delay_counter = 32; //Initial delay of 32 * 4 = 128ms
+volatile uint16_t menu_idle_delay_counter = 0;
+volatile uint16_t menu_idle_cycle_counter = 1249;
 
 //System variables
 volatile uint8_t time_hour = 0;
@@ -111,6 +113,14 @@ inline void display(uint8_t digit)
 }
 
 //Menu display functions
+
+inline void display_clear()
+{
+	display_1 = 10;
+	display_2 = 10;
+	display_3 = 10;
+	display_4 = 10;
+}
 
 inline void display_vcc()
 {
@@ -165,11 +175,6 @@ inline void display_lamp_time_off()
 	display_2 = lamp_time_off_hour % 10;
 	display_3 = lamp_time_off_minute / 10 % 10;
 	display_4 = lamp_time_off_minute % 10;
-}
-
-inline void display_watering_countdown()
-{
-	//TODO
 }
 
 int main()
@@ -253,6 +258,7 @@ int main()
 			menu_option++;
 			if (menu_option == 8) menu_option = 0;
 			display_vcc_delay_counter = 1;
+			menu_idle_delay_counter = 0;
 			sei();
 
 			//125 * 4ms = 500ms delay
@@ -264,6 +270,7 @@ int main()
 		{
 			//Safe menu option change
 			cli();
+			menu_idle_delay_counter = 0;
 			if (menu_option == 1)
 			{
 				time_hour++;
@@ -300,6 +307,7 @@ int main()
 		{
 			//Safe menu option change
 			cli();
+			menu_idle_delay_counter = 0;
 			if (menu_option == 1)
 			{
 				time_hour--;
@@ -336,6 +344,7 @@ int main()
 		{
 			//Safe menu option change
 			cli();
+			menu_idle_delay_counter = 0;
 			if (menu_option == 1)
 			{
 				time_minute++;
@@ -374,6 +383,7 @@ int main()
 		{
 			//Safe menu option change
 			cli();
+			menu_idle_delay_counter = 0;
 			if (menu_option == 1)
 			{
 				time_minute--;
@@ -419,7 +429,7 @@ ISR(TIMER0_OVF_vect)
 	//Menu display handling
 	if (menu_option == 0)
 	{
-		display_vcc();
+		display_clear();
 	}
 	else if (menu_option == 1)
 	{
@@ -447,7 +457,7 @@ ISR(TIMER0_OVF_vect)
 	}
 	else if (menu_option == 7)
 	{
-		display_watering_countdown();
+		display_vcc();
 	}
 
 	//7-segment display - set digit
@@ -456,7 +466,7 @@ ISR(TIMER0_OVF_vect)
 	//Display dot according to the selected menu option
 	if (menu_option == 0)
 	{
-		if (display_n == 1) DISPLAY_SHOW_DOT;
+		//No dot
 	}
 	else if (menu_option == 1)
 	{
@@ -484,7 +494,7 @@ ISR(TIMER0_OVF_vect)
 	}
 	else if (menu_option == 7)
 	{
-		if (display_n == 2) DISPLAY_SHOW_DOT;
+		if (display_n == 1) DISPLAY_SHOW_DOT;
 	}
 
 	//7-segment display - turn on digit
@@ -610,5 +620,29 @@ ISR(TIMER0_OVF_vect)
 	else
 	{
 		LIGHT_OFF;
+	}
+
+	//Menu idle - 1250 * 4ms = 5s delay
+	if (menu_idle_delay_counter < 1250)
+	{
+		menu_idle_delay_counter++;
+	}
+	else
+	{
+		menu_idle_cycle_counter++;
+		if (menu_idle_cycle_counter == 1250)
+		{
+			if (menu_option == 6)
+			{
+				menu_option = 7;
+				display_vcc_delay_counter = 1;
+			}
+			else
+			{
+				menu_option = 6;
+			}
+
+			menu_idle_cycle_counter = 0;
+		}
 	}
 }
