@@ -52,7 +52,7 @@ volatile uint16_t Vcc_value = 0;
 uint32_t Vcc_value_temp = 0;
 uint16_t ADC_result = 0;
 uint8_t Vcc_values_index = 0;
-uint8_t Vcc_value_valid = 0;
+volatile uint8_t Vcc_value_valid = 0;
 
 //Menu
 //LED_2 LED_1 LED_0 - description
@@ -79,6 +79,10 @@ volatile uint8_t watering_days_passed = 0;
 volatile uint8_t watering_duration_seconds = 1;
 volatile uint8_t watering_duration_second_tenths = 0;
 volatile uint16_t watering_counter = 0;
+volatile uint8_t lamp_time_on_hour = 8;
+volatile uint8_t lamp_time_on_minute = 0;
+volatile uint8_t lamp_time_off_hour = 16;
+volatile uint8_t lamp_time_off_minute = 0;
 
 //7-segment display functions
 
@@ -149,12 +153,18 @@ inline void display_watering_duration_setting()
 
 inline void display_lamp_time_on()
 {
-	//TODO
+	display_1 = lamp_time_on_hour / 10 % 10;
+	display_2 = lamp_time_on_hour % 10;
+	display_3 = lamp_time_on_minute / 10 % 10;
+	display_4 = lamp_time_on_minute % 10;
 }
 
 inline void display_lamp_time_off()
 {
-	//TODO
+	display_1 = lamp_time_off_hour / 10 % 10;
+	display_2 = lamp_time_off_hour % 10;
+	display_3 = lamp_time_off_minute / 10 % 10;
+	display_4 = lamp_time_off_minute % 10;
 }
 
 inline void display_watering_countdown()
@@ -269,6 +279,16 @@ int main()
 				watering_duration_seconds++;
 				if (watering_duration_seconds == 0) watering_duration_seconds++;
 			}
+			else if (menu_option == 4)
+			{
+				lamp_time_on_hour++;
+				if (lamp_time_on_hour == 24) lamp_time_on_hour = 0;
+			}
+			else if (menu_option == 5)
+			{
+				lamp_time_off_hour++;
+				if (lamp_time_off_hour == 24) lamp_time_off_hour = 0;
+			}
 			sei();
 
 			//50 * 4ms = 200ms delay
@@ -294,6 +314,16 @@ int main()
 			{
 				watering_duration_seconds--;
 				if (watering_duration_seconds == 0) watering_duration_seconds = 255;
+			}
+			else if (menu_option == 4)
+			{
+				lamp_time_on_hour--;
+				if (lamp_time_on_hour == 255) lamp_time_on_hour = 23;
+			}
+			else if (menu_option == 5)
+			{
+				lamp_time_off_hour--;
+				if (lamp_time_off_hour == 255) lamp_time_off_hour = 23;
 			}
 			sei();
 
@@ -323,6 +353,16 @@ int main()
 				watering_duration_second_tenths++;
 				if (watering_duration_second_tenths == 10) watering_duration_second_tenths = 0;
 			}
+			else if (menu_option == 4)
+			{
+				lamp_time_on_minute++;
+				if (lamp_time_on_minute == 60) lamp_time_on_minute = 0;
+			}
+			else if (menu_option == 5)
+			{
+				lamp_time_off_minute++;
+				if (lamp_time_off_minute == 60) lamp_time_off_minute = 0;
+			}
 			sei();
 
 			//50 * 4ms = 200ms delay
@@ -350,6 +390,16 @@ int main()
 			{
 				watering_duration_second_tenths--;
 				if (watering_duration_second_tenths == 255) watering_duration_second_tenths = 9;
+			}
+			else if (menu_option == 4)
+			{
+				lamp_time_on_minute--;
+				if (lamp_time_on_minute == 255) lamp_time_on_minute = 59;
+			}
+			else if (menu_option == 5)
+			{
+				lamp_time_off_minute--;
+				if (lamp_time_off_minute == 255) lamp_time_off_minute = 59;
 			}
 			sei();
 
@@ -540,5 +590,25 @@ ISR(TIMER0_OVF_vect)
 	{
 		watering_counter--;
 		if (watering_counter == 0) PUMP_OFF;
+	}
+
+	//Light
+	if (
+		(Vcc_value_valid)
+		&&		
+		((time_hour > lamp_time_on_hour)	||
+		(time_hour == lamp_time_on_hour && time_minute >= lamp_time_on_minute))
+		&&
+		((time_hour < lamp_time_off_hour) ||
+		(time_hour == lamp_time_off_hour && time_minute <= lamp_time_off_minute))		
+		&&
+		(Vcc_value >= 4300)
+		)
+	{
+		LIGHT_ON;
+	}
+	else
+	{
+		LIGHT_OFF;
 	}
 }
