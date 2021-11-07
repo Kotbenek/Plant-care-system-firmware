@@ -152,7 +152,7 @@ int main()
   ca:	3e 9a       	sbi	0x07, 6	; 7
 
 	//Set ADC input to 1.22V bandgap
-    ADMUX |= (1 << MUX4) | (1 << MUX3) | (1 << MUX2) | (1 << MUX1);
+	ADMUX |= (1 << MUX4) | (1 << MUX3) | (1 << MUX2) | (1 << MUX1);
   cc:	87 b1       	in	r24, 0x07	; 7
   ce:	8e 61       	ori	r24, 0x1E	; 30
   d0:	87 b9       	out	0x07, r24	; 7
@@ -162,7 +162,7 @@ int main()
   d2:	86 b1       	in	r24, 0x06	; 6
   d4:	85 60       	ori	r24, 0x05	; 5
   d6:	86 b9       	out	0x06, r24	; 6
-	
+
 	//ADC free running mode
 	ADCSRA |= (1 << ADATE);
   d8:	35 9a       	sbi	0x06, 5	; 6
@@ -346,7 +346,7 @@ int main()
  18a:	ff 20       	and	r15, r15
  18c:	11 f4       	brne	.+4      	; 0x192 <main+0x100>
  18e:	b0 92 77 00 	sts	0x0077, r11
-			sei();		
+			sei();
  192:	78 94       	sei
 	    }
 
@@ -1033,7 +1033,7 @@ inline void display_time()
 
 inline void display_vcc()
 {
-	display_vcc_delay_counter--;	
+	display_vcc_delay_counter--;
  656:	80 91 65 00 	lds	r24, 0x0065
  65a:	81 50       	subi	r24, 0x01	; 1
  65c:	80 93 65 00 	sts	0x0065, r24
@@ -1527,7 +1527,7 @@ inline void display(uint8_t digit)
  99e:	8c 5c       	subi	r24, 0xCC	; 204
  9a0:	90 41       	sbci	r25, 0x10	; 16
  9a2:	10 f0       	brcs	.+4      	; 0x9a8 <__stack+0x149>
-		(time_hour == lamp_time_off_hour && time_minute <= lamp_time_off_minute))		
+		(time_hour == lamp_time_off_hour && time_minute <= lamp_time_off_minute))
 		&&
 		(Vcc_value >= 4300)
 		)

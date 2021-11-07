@@ -124,7 +124,7 @@ inline void display_clear()
 
 inline void display_vcc()
 {
-	display_vcc_delay_counter--;	
+	display_vcc_delay_counter--;
 	if (display_vcc_delay_counter == 0)
 	{
 		display_1 = 10;
@@ -200,11 +200,11 @@ int main()
 	ADMUX |= (1 << REFS0);
 
 	//Set ADC input to 1.22V bandgap
-    ADMUX |= (1 << MUX4) | (1 << MUX3) | (1 << MUX2) | (1 << MUX1);
+	ADMUX |= (1 << MUX4) | (1 << MUX3) | (1 << MUX2) | (1 << MUX1);
 
 	//Set ADC prescaler to 32
 	ADCSRA |= (1 << ADPS2) | (1 << ADPS0);
-	
+
 	//ADC free running mode
 	ADCSRA |= (1 << ADATE);
 
@@ -247,7 +247,7 @@ int main()
 			cli();
 			Vcc_value = (uint16_t)Vcc_value_temp;
 			if (Vcc_values_index == 0) Vcc_value_valid = 1;
-			sei();		
+			sei();
 	    }
 
 		//Menu button
@@ -605,12 +605,12 @@ ISR(TIMER0_OVF_vect)
 	//Light
 	if (
 		(Vcc_value_valid)
-		&&		
-		((time_hour > lamp_time_on_hour)	||
+		&&
+		((time_hour > lamp_time_on_hour) ||
 		(time_hour == lamp_time_on_hour && time_minute >= lamp_time_on_minute))
 		&&
 		((time_hour < lamp_time_off_hour) ||
-		(time_hour == lamp_time_off_hour && time_minute <= lamp_time_off_minute))		
+		(time_hour == lamp_time_off_hour && time_minute <= lamp_time_off_minute))
 		&&
 		(Vcc_value >= 4300)
 		)
