@@ -1441,11 +1441,11 @@ inline void display(uint8_t digit)
  8de:	98 17       	cp	r25, r24
  8e0:	e1 f4       	brne	.+56     	; 0x91a <__stack+0xbb>
 				{
-					if (watering_time_days == watering_days_passed)
+					if (watering_time_days <= watering_days_passed)
  8e2:	90 91 68 00 	lds	r25, 0x0068
  8e6:	80 91 80 00 	lds	r24, 0x0080
- 8ea:	98 17       	cp	r25, r24
- 8ec:	b1 f4       	brne	.+44     	; 0x91a <__stack+0xbb>
+ 8ea:	89 17       	cp	r24, r25
+ 8ec:	b0 f0       	brcs	.+44     	; 0x91a <__stack+0xbb>
 					{
 						//Start watering
 						PUMP_ON;

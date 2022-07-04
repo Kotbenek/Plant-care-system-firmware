@@ -583,7 +583,7 @@ ISR(TIMER0_OVF_vect)
 
 				if (time_hour == watering_time_hour)
 				{
-					if (watering_time_days == watering_days_passed)
+					if (watering_time_days <= watering_days_passed)
 					{
 						//Start watering
 						PUMP_ON;
