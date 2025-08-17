@@ -1,3 +1,8 @@
+# Moved to Codeberg
+
+This repository was moved to Codeberg:
+https://codeberg.org/Kotbenek/Plant-care-system-firmware
+
 # Plant-care-system-firmware
 Program for AVR ATmega32 microcontroller on [Plant-care-system](https://github.com/Kotbenek/Plant-care-system) board
 
